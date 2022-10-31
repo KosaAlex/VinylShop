@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      crossorigin="anonymous"
+    />
+<
+        <title>{% block title %}{% endblock %}</title>
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='bs/css/flatly.min.css') }}" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+    </head>
+    <body >
+        {% if admin %}
+       <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style=" background-color: #c5442c">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                </div>
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active">
+                            <a href="{{ url_for('admin') }}"><i class="glyphicon glyphicon-dashboard"></i> Admin </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('add') }}"><i class="glyphicon glyphicon-plus-sign"></i> Adaugă un produs</a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('index') }}"><i class="glyphicon glyphicon-chevron-left"></i> Înapoi la pagina principală</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        {% else %}
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation"
+             style="background-color:#D2B04C">
+            <div class="container-fluid" >
+                <div class="navbar-header" >
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+
+                <div class="collapse navbar-collapse navbar-ex1-collapse" >
+                    <nav class="navbar navbar-default" style="background-color:#D2B04C; color:#D2B04C">
+                                {% if user.is_authenticated %}
+                                <a class="nav-item nav-link" id="home" href="/" style="color:#faf2f2">Acasă</a>
+                                <a class="nav-item nav-link" id="logout" href="/logout" style="color:#faf2f2">Deconectare</a>
+
+                                    <a class="nav-item nav-link" id="user_orders" href="/user_orders" style="color:#e0cbcb">Comenzile mele/Schimba parola</a>
+
+                                {% else %}
+                                    <a class="nav-item nav-link" id="home" href="/" style="color:#faf2f2">Acasă</a>
+                                <a class="nav-item nav-link" id="login" href="/login" style="color:#faf2f2">Autentificare</a>
+                                 <a class="nav-item nav-link" id="signUp" href="/sign-up" style="color:#faf2f2">Creează-ți cont</a>
+
+                                 {% endif %}
+                            <a href="{{ url_for('index') }}" style="color:#faf2f2"> <!-- url for cart -->
+                                <i class="glyphicon glyphicon-shopping-cart" style="color:#faf2f2"></i> Coș
+                            </a>
+                    </nav>
+                </div>
+            </div>
+        </nav>
+        {% endif %}
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %}
+        {% for category, message in messages %} {% if category == 'error' %}
+    <div class="alert alert-danger alter-dismissable fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% else %}
+    <div class="alert alert-success alter-dismissable fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endif %} {% endfor %} {% endif %} {% endwith %}
+
+        <div class="container" id="page">
+
+        {% block body %}{% endblock %}
+            
+            <footer>
+                <div class="row pad">
+
+                </div>
+            </footer>
+        </div>
+
+        <script src="{{ url_for('static', filename='bs/js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='bs/js/bootstrap.min.js') }}"></script>
+     <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='index.js') }}"
+    ></script>
+
+
+    </body>
+</html>

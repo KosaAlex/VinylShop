@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+<head>
+ <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+   <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      crossorigin="anonymous"
+    />
+</head>
+{% block body %}
+{% with messages = get_flashed_messages(with_categories=true) %} {% if messages %}
+        {% for category, message in messages %} {% if category == 'error' %}
+    <div class="alert alert-danger alter-dismissable fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% else %}
+    <div class="alert alert-success alter-dismissable fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endif %} {% endfor %} {% endif %} {% endwith %}
+<form method="POST">
+<div class="title">
+  <h3 align="center">Creează-ți un cont</h3>
+</div>
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input
+      type="email"
+      class="form-control"
+      id="email"
+      name="email"
+      placeholder="Introduceti emailul"
+    />
+  </div>
+  <div class="form-group">
+    <label for="firstName">Nume</label>
+    <input
+      type="text"
+      class="form-control"
+      id="firstName"
+      name="firstName"
+      placeholder="Introduceti numele"
+    />
+  </div>
+  <div class="form-group">
+    <label for="password1">Parola</label>
+    <input
+      type="password"
+      class="form-control"
+      id="password1"
+      name="password1"
+      placeholder="Introduceti parola"
+    />
+  </div>
+  <div class="form-group">
+    <label for="password2">Confirmarea parolei</label>
+    <input
+      type="password"
+      class="form-control"
+      id="password2"
+      name="password2"
+      placeholder="Confirmarea parolei"
+    />
+  </div>
+  <br />
+    <div class="but">
+  <button type="submit" >Submit</button>
+    </div>
+</form>
+{% endblock %}
