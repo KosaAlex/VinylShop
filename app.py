@@ -216,6 +216,37 @@ def sign_up():
 
     return render_template("sing_up.html", user=current_user)
 
+@app.route('/add-to-cart', methods=['POST'])
+def add_to_cart():
+    if 'cart' not in session:
+        session['cart'] = []
+
+    form = AddToCart()
+
+    if form.validate_on_submit():
+        session['cart'].append({'id': form.id.data, 'quantity': form.quantity.data})
+        session.modified = True
+
+    return redirect(url_for('index'))
+
+@app.route('/product/<id>')
+def product(id):
+    product = Product.query.filter_by(id=id).first()
+
+    form = AddToCart()
+
+    return render_template('view-product.html', product=product, form=form, user=current_user)
+
+@app.route('/quick-add/<id>')
+def quick_add(id):
+    if 'cart' not in session:
+        session['cart'] = []
+
+    session['cart'].append({'id': id, 'quantity': 1})
+    session.modified = True
+
+    return redirect(url_for('index'))
+
 
 create_database(app)
 
@@ -226,6 +257,63 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+
+@app.route('/admin')
+def admin():
+    products = Product.query.all()
+    products_in_stock = Product.query.filter(Product.stock > 0).count()
+
+    orders = Order.query.all()
+
+    return render_template('admin/index.html', admin=True, products=products, products_in_stock=products_in_stock,
+                           orders=orders, user=current_user)
+
+@app.route('/admin/add', methods=['GET', 'POST'])
+def add():
+    form = AddProduct()
+
+    if form.validate_on_submit():
+        image_url = photos.url(photos.save(form.image.data))
+
+        new_product = Product(name=form.name.data, price=form.price.data, stock=form.stock.data,
+                              description=form.description.data, image=image_url)
+
+        db.session.add(new_product)
+        db.session.commit()
+
+        return redirect(url_for('admin'))
+
+    return render_template('admin/add-product.html', admin=True, form=form, user=current_user)
+
+
+@app.route('/admin/order/<order_id>')
+def order(order_id):
+    order = Order.query.filter_by(id=int(order_id)).first()
+
+    return render_template('admin/view-order.html', order=order, admin=True, user=current_user)
+
+@app.route('/delete-product', methods=['POST'])
+def delete_product():
+    product = json.loads(request.data)
+    productId = product['productId']
+    product = Product.query.get(productId)
+    if product:
+        db.session.delete(product)
+        db.session.commit()
+    return jsonify({})
+
+@app.route('/update-order', methods=['POST'])
+def update_order():
+    order = json.loads(request.data)
+    orderId = order['orderId']
+    order = Order.query.get(orderId)
+    if order:
+        order_mod = Order.query.filter_by(id=orderId).update({'status': "Sent"})
+        db.session.commit()
+    return jsonify({})
+
+
 
 if __name__ == '__main__':
     app.run()
